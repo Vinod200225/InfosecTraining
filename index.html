@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Free iPhone 15 Pro!</title>
+    <title>Daily Inspiration</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             padding: 20px;
-            background: linear-gradient(45deg, #007AFF, #34C759);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             min-height: 100vh;
             margin: 0;
@@ -17,102 +17,191 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            transition: all 0.5s ease;
         }
         .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            max-width: 600px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 50px;
+            border-radius: 25px;
+            backdrop-filter: blur(15px);
+            max-width: 700px;
             width: 90%;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
         }
         h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-        .iphone {
-            font-size: 4em;
+        .emoji {
+            font-size: 6em;
+            margin: 30px 0;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .content-box {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 25px 0;
+            font-size: 1.3em;
+            line-height: 1.6;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .countdown {
+            font-size: 1.5em;
             margin: 20px 0;
-        }
-        .captured-data {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        .data-item {
-            margin: 10px 0;
-            padding: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 0.9em;
-        }
-        .security-warning {
-            background: rgba(255, 0, 0, 0.3);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.5);
+            color: #FFD700;
+            font-weight: bold;
         }
         .hidden {
             display: none;
         }
-        .loading {
-            font-size: 1.2em;
-            margin: 20px 0;
-            color: #FFD700;
+        .warning-section {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            padding: 30px;
+            border-radius: 20px;
+            margin: 25px 0;
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            animation: pulseWarning 1.5s infinite;
+        }
+        @keyframes pulseWarning {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .data-item {
+            background: rgba(0, 0, 0, 0.3);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: left;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .fun-fact {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 15px;
+            font-style: italic;
+        }
+        .author {
+            font-size: 1em;
+            opacity: 0.7;
+            margin-top: 10px;
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="iphone">📱</div>
-        <h1>CONGRATULATIONS!</h1>
-        <p>You've won an iPhone 15 Pro!</p>
+        <div class="emoji" id="mainEmoji">💡</div>
+        <h1>Daily Dose of Inspiration</h1>
         
-        <div id="prizeView">
-            <p>Verifying your eligibility...</p>
-            <div class="loading">🎯 Checking device compatibility...</div>
+        <div id="funContentView">
+            <div class="content-box">
+                <div id="contentText">Loading your daily inspiration...</div>
+                <div id="contentAuthor" class="author"></div>
+                <div id="funFact" class="fun-fact"></div>
+            </div>
+            <div class="countdown" id="countdown">Next inspiration in: 10</div>
+            <p><small>Take a moment to reflect on this thought</small></p>
         </div>
         
         <div id="securityView" class="hidden">
-            <div class="captured-data">
-                <h3>🔍 What We Captured:</h3>
-                <div class="data-item">
-                    <strong>Device:</strong><br>
-                    <span id="userAgent">Loading...</span>
+            <div class="emoji">⚠️</div>
+            <div class="warning-section">
+                <h2>SECURITY AWARENESS DEMONSTRATION</h2>
+                <p style="font-size: 1.2em; margin: 20px 0;">
+                    <strong>While you were reading, we captured your device fingerprint!</strong>
+                </p>
+                
+                <div style="text-align: left; margin: 25px 0;">
+                    <h3>📱 What We Collected:</h3>
+                    <div class="data-item">
+                        <strong>Your Device:</strong> <span id="userAgent"></span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Your Platform:</strong> <span id="platform"></span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Your Screen Size:</strong> <span id="screenSize"></span>
+                    </div>
+                    <div class="data-item">
+                        <strong>Your Language:</strong> <span id="language"></span>
+                    </div>
                 </div>
-                <div class="data-item">
-                    <strong>Platform:</strong><br>
-                    <span id="platform">Loading...</span>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 20px; border-radius: 15px; margin: 20px 0;">
+                    <h3>🎯 Security Lesson:</h3>
+                    <p>This is exactly what happens when you interact with unknown QR codes or suspicious links!</p>
+                    <p><strong>Always verify sources before scanning or clicking.</strong></p>
                 </div>
-                <div class="data-item">
-                    <strong>Screen:</strong><br>
-                    <span id="screenSize">Loading...</span>
-                </div>
-                <div class="data-item">
-                    <strong>Language:</strong><br>
-                    <span id="language">Loading...</span>
-                </div>
-                <div class="data-item">
-                    <strong>Time Zone:</strong><br>
-                    <span id="timezone">Loading...</span>
-                </div>
-            </div>
-            
-            <div class="security-warning">
-                <h3>⚠️ SECURITY DEMONSTRATION</h3>
-                <p><strong>This is exactly what malicious QR codes capture!</strong></p>
-                <p>Your device just shared all this information automatically.</p>
-                <p>✅ <strong>Always verify QR codes before scanning!</strong></p>
             </div>
         </div>
     </div>
 
     <script>
+        // Random content database
+        const contentDatabase = [
+            {
+                type: 'quote',
+                content: "The only way to do great work is to love what you do.",
+                author: "Steve Jobs",
+                emoji: "💼",
+                funFact: "Steve Jobs dropped out of college but still attended calligraphy classes, which later influenced Apple's typography."
+            },
+            {
+                type: 'joke',
+                content: "Why do programmers prefer dark mode? Because light attracts bugs!",
+                author: "",
+                emoji: "😄",
+                funFact: "The first computer bug was an actual moth found in Harvard's Mark II computer in 1947."
+            },
+            {
+                type: 'quote',
+                content: "Security is always excessive until it's not enough.",
+                author: "Robbie Sinclair",
+                emoji: "🔒",
+                funFact: "The first computer virus was called 'Creeper' and simply displayed the message 'I'm the creeper, catch me if you can!'"
+            },
+            {
+                type: 'joke',
+                content: "Why was the computer cold? It left its Windows open!",
+                author: "",
+                emoji: "❄️",
+                funFact: "The 'Windows' name was almost called 'Interface Manager' before launch."
+            },
+            {
+                type: 'quote',
+                content: "Privacy is not something that I'm merely entitled to, it's an absolute prerequisite.",
+                author: "Marlon Brando",
+                emoji: "🕵️",
+                funFact: "The average person has 7-10 social media accounts sharing personal data."
+            },
+            {
+                type: 'fact',
+                content: "The first QR code was created in 1994 for tracking vehicles during manufacturing.",
+                author: "",
+                emoji: "📱",
+                funFact: "QR stands for 'Quick Response' - they were designed to be decoded quickly."
+            },
+            {
+                type: 'joke',
+                content: "Why do Java developers wear glasses? Because they can't C#!",
+                author: "",
+                emoji: "👓",
+                funFact: "Java was originally called 'Oak' after an oak tree outside the developer's office."
+            }
+        ];
+
         // Capture device information
         const deviceInfo = {
             userAgent: navigator.userAgent,
@@ -122,52 +211,77 @@
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         };
 
-        // Display the captured information
-        function displayCapturedInfo() {
-            document.getElementById('userAgent').textContent = deviceInfo.userAgent;
-            document.getElementById('platform').textContent = deviceInfo.platform;
-            document.getElementById('screenSize').textContent = deviceInfo.screenSize;
-            document.getElementById('language').textContent = deviceInfo.language;
-            document.getElementById('timezone').textContent = deviceInfo.timezone;
+        // Get random content
+        function getRandomContent() {
+            const randomIndex = Math.floor(Math.random() * contentDatabase.length);
+            return contentDatabase[randomIndex];
+        }
+
+        // Display random content
+        function displayRandomContent() {
+            const content = getRandomContent();
+            document.getElementById('contentText').textContent = content.content;
+            document.getElementById('contentAuthor').textContent = content.author ? `- ${content.author}` : '';
+            document.getElementById('funFact').textContent = content.funFact;
+            document.getElementById('mainEmoji').textContent = content.emoji;
         }
 
         // Submit to backend
         function submitToBackend() {
             const scriptURL = 'https://script.google.com/macros/s/AKfycbyq7ANzYAgfy1j-BZEHZ-fspNuuvjnGsPaJHvtAXr677UKoO4B8EAxSzE1uhSE-oMpj/exec';
             
-            // Create image request (bypasses CORS)
             const img = new Image();
             img.src = scriptURL + '?userAgent=' + encodeURIComponent(deviceInfo.userAgent) + 
                      '&platform=' + encodeURIComponent(deviceInfo.platform) + 
                      '&screenSize=' + encodeURIComponent(deviceInfo.screenSize) + 
                      '&language=' + encodeURIComponent(deviceInfo.language) +
                      '&timezone=' + encodeURIComponent(deviceInfo.timezone);
-            
-            console.log('📤 Data sent to backend');
         }
 
-        // Main function
-        function main() {
-            console.log('🎯 Starting security demo...');
+        // Display captured info
+        function displayCapturedInfo() {
+            document.getElementById('userAgent').textContent = deviceInfo.userAgent;
+            document.getElementById('platform').textContent = deviceInfo.platform;
+            document.getElementById('screenSize').textContent = deviceInfo.screenSize;
+            document.getElementById('language').textContent = deviceInfo.language;
+        }
+
+        // Countdown function
+        function startCountdown() {
+            let countdown = 10;
+            const countdownElement = document.getElementById('countdown');
             
-            // Switch to security view after 3 seconds
-            setTimeout(() => {
-                document.getElementById('prizeView').classList.add('hidden');
-                document.getElementById('securityView').classList.remove('hidden');
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownElement.textContent = `Next inspiration in: ${countdown}`;
                 
-                // Display captured info
-                displayCapturedInfo();
-                
-                // Submit to backend
-                submitToBackend();
-                
-                console.log('🔐 Security demo completed');
-                console.table(deviceInfo);
-                
-            }, 3000);
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    showSecurityWarning();
+                }
+            }, 1000);
+        }
+
+        // Show security warning
+        function showSecurityWarning() {
+            document.getElementById('funContentView').classList.add('hidden');
+            document.getElementById('securityView').classList.remove('hidden');
+            document.body.style.background = 'linear-gradient(135deg, #ff6b6b, #c23616)';
+            
+            displayCapturedInfo();
+            submitToBackend();
+            
+            console.log('🔐 Security awareness demo activated');
         }
 
         // Start the demo
+        function main() {
+            console.log('🎭 Starting creative security demo...');
+            displayRandomContent();
+            startCountdown();
+        }
+
+        // Start when page loads
         window.onload = main;
     </script>
 </body>
