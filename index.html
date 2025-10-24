@@ -1,47 +1,174 @@
-function doGet(e) {
-  try {
-    // Get parameters from URL
-    var userAgent = e.parameters.userAgent;
-    var platform = e.parameters.platform;
-    var screenSize = e.parameters.screenSize;
-    var language = e.parameters.language;
-    var timezone = e.parameters.timezone;
-    var timestamp = e.parameters.timestamp;
-    
-    if (userAgent) {
-      // Save to sheet
-      var sheetUrl = 'https://docs.google.com/spreadsheets/d/1TfolNrzEspUCZcqllO-JNuiekKgxKvb1NCzUii5Rgbg/edit';
-      var sheet = SpreadsheetApp.openByUrl(sheetUrl).getActiveSheet();
-      
-      // Add headers if first time
-      if (sheet.getLastRow() === 0) {
-        sheet.getRange(1, 1, 1, 7).setValues([[
-          'Timestamp', 'Device Info', 'Platform', 'Screen Size', 'Language', 'Timezone', 'Status'
-        ]]);
-      }
-      
-      // Add data
-      sheet.appendRow([
-        new Date(),
-        userAgent,
-        platform,
-        screenSize,
-        language,
-        timezone,
-        '✅ CAPTURED'
-      ]);
-      
-      Logger.log('✅ Data saved: ' + userAgent);
-    }
-    
-    return ContentService.createTextOutput('Data received successfully');
-    
-  } catch (error) {
-    Logger.log('❌ Error: ' + error.toString());
-    return ContentService.createTextOutput('Error: ' + error.toString());
-  }
-}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free iPhone 15 Pro!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #007AFF, #34C759);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            width: 90%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .iphone {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+        .captured-data {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        .data-item {
+            margin: 10px 0;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        .security-warning {
+            background: rgba(255, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .hidden {
+            display: none;
+        }
+        .loading {
+            font-size: 1.2em;
+            margin: 20px 0;
+            color: #FFD700;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="iphone">📱</div>
+        <h1>CONGRATULATIONS!</h1>
+        <p>You've won an iPhone 15 Pro!</p>
+        
+        <div id="prizeView">
+            <p>Verifying your eligibility...</p>
+            <div class="loading">🎯 Checking device compatibility...</div>
+        </div>
+        
+        <div id="securityView" class="hidden">
+            <div class="captured-data">
+                <h3>🔍 What We Captured:</h3>
+                <div class="data-item">
+                    <strong>Device:</strong><br>
+                    <span id="userAgent">Loading...</span>
+                </div>
+                <div class="data-item">
+                    <strong>Platform:</strong><br>
+                    <span id="platform">Loading...</span>
+                </div>
+                <div class="data-item">
+                    <strong>Screen:</strong><br>
+                    <span id="screenSize">Loading...</span>
+                </div>
+                <div class="data-item">
+                    <strong>Language:</strong><br>
+                    <span id="language">Loading...</span>
+                </div>
+                <div class="data-item">
+                    <strong>Time Zone:</strong><br>
+                    <span id="timezone">Loading...</span>
+                </div>
+            </div>
+            
+            <div class="security-warning">
+                <h3>⚠️ SECURITY DEMONSTRATION</h3>
+                <p><strong>This is exactly what malicious QR codes capture!</strong></p>
+                <p>Your device just shared all this information automatically.</p>
+                <p>✅ <strong>Always verify QR codes before scanning!</strong></p>
+            </div>
+        </div>
+    </div>
 
-function doPost(e) {
-  return ContentService.createTextOutput('Use GET method for QR codes');
-}
+    <script>
+        // Capture device information
+        const deviceInfo = {
+            userAgent: navigator.userAgent,
+            platform: navigator.platform,
+            screenSize: screen.width + 'x' + screen.height,
+            language: navigator.language,
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+        };
+
+        // Display the captured information
+        function displayCapturedInfo() {
+            document.getElementById('userAgent').textContent = deviceInfo.userAgent;
+            document.getElementById('platform').textContent = deviceInfo.platform;
+            document.getElementById('screenSize').textContent = deviceInfo.screenSize;
+            document.getElementById('language').textContent = deviceInfo.language;
+            document.getElementById('timezone').textContent = deviceInfo.timezone;
+        }
+
+        // Submit to backend
+        function submitToBackend() {
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbyq7ANzYAgfy1j-BZEHZ-fspNuuvjnGsPaJHvtAXr677UKoO4B8EAxSzE1uhSE-oMpj/exec';
+            
+            // Create image request (bypasses CORS)
+            const img = new Image();
+            img.src = scriptURL + '?userAgent=' + encodeURIComponent(deviceInfo.userAgent) + 
+                     '&platform=' + encodeURIComponent(deviceInfo.platform) + 
+                     '&screenSize=' + encodeURIComponent(deviceInfo.screenSize) + 
+                     '&language=' + encodeURIComponent(deviceInfo.language) +
+                     '&timezone=' + encodeURIComponent(deviceInfo.timezone);
+            
+            console.log('📤 Data sent to backend');
+        }
+
+        // Main function
+        function main() {
+            console.log('🎯 Starting security demo...');
+            
+            // Switch to security view after 3 seconds
+            setTimeout(() => {
+                document.getElementById('prizeView').classList.add('hidden');
+                document.getElementById('securityView').classList.remove('hidden');
+                
+                // Display captured info
+                displayCapturedInfo();
+                
+                // Submit to backend
+                submitToBackend();
+                
+                console.log('🔐 Security demo completed');
+                console.table(deviceInfo);
+                
+            }, 3000);
+        }
+
+        // Start the demo
+        window.onload = main;
+    </script>
+</body>
+</html>
